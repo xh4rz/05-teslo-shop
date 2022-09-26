@@ -10,7 +10,7 @@ import {
 	Typography
 } from '@mui/material';
 
-const addressPage = () => {
+const AddressPage = () => {
 	return (
 		<ShopLayout
 			title="Dirección"
@@ -67,4 +67,4 @@ const addressPage = () => {
 	);
 };
 
-export default addressPage;
+export default AddressPage;
