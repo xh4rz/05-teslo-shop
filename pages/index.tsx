@@ -2,20 +2,10 @@ import type { NextPage } from 'next';
 import { ShopLayout } from '../components/layouts';
 import { Typography } from '@mui/material';
 import { ProductList } from '../components/products';
-
-import useSWR from 'swr';
-
-const fetcher = (...args: [key: string]) =>
-	fetch(...args).then((res) => res.json());
+import { useProducts } from '../hooks';
 
 const HomePage: NextPage = () => {
-	const { data, error } = useSWR('/api/products', fetcher);
-
-	if (error) return <div>failed to load</div>;
-	if (!data) return <div>loading...</div>;
-
-	console.log(data);
-
+	const { products, isLoading } = useProducts('/products');
 	return (
 		<ShopLayout
 			title={'Teslo-Shop - Home'}
@@ -28,7 +18,7 @@ const HomePage: NextPage = () => {
 				Todos los productos
 			</Typography>
 
-			<ProductList products={data} />
+			{isLoading ? <h1>Cargando...</h1> : <ProductList products={products} />}
 		</ShopLayout>
 	);
 };
