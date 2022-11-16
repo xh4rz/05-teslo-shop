@@ -3,6 +3,7 @@ import { ShopLayout } from '../components/layouts';
 import { Typography } from '@mui/material';
 import { ProductList } from '../components/products';
 import { useProducts } from '../hooks';
+import { FullScreenLoading } from '../components/ui';
 
 const HomePage: NextPage = () => {
 	const { products, isLoading } = useProducts('/products');
@@ -18,7 +19,7 @@ const HomePage: NextPage = () => {
 				Todos los productos
 			</Typography>
 
-			{isLoading ? <h1>Cargando...</h1> : <ProductList products={products} />}
+			{isLoading ? <FullScreenLoading /> : <ProductList products={products} />}
 		</ShopLayout>
 	);
 };
