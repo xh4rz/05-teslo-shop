@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const ProductCard: FC<Props> = ({
-	product: { images, title, price }
+	product: { images, title, price, slug }
 }) => {
 	const [isHovered, setIsHovered] = useState(false);
 	const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -34,7 +34,7 @@ export const ProductCard: FC<Props> = ({
 			onMouseLeave={() => setIsHovered(false)}
 		>
 			<Card>
-				<NextLink href="/product/slug" passHref prefetch={false}>
+				<NextLink href={`/product/${slug}`} passHref prefetch={false}>
 					<Link>
 						<CardActionArea>
 							<CardMedia

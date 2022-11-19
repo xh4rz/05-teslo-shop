@@ -5,9 +5,13 @@ import { initialData } from '../../database/products';
 import { ProductSlideshow, SizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
 
-const product = initialData.products[0];
-
 const ProductPage = () => {
+	// const router = useRouter();
+
+	// const { products: product, isLoading } = useProducts(
+	// 	`/products/${router.query.slug}`
+	// );
+
 	return (
 		<ShopLayout title={product.title} pageDescription={product.description}>
 			<Grid container spacing={3}>
