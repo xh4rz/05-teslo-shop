@@ -5,6 +5,7 @@ import {
 	Card,
 	CardActionArea,
 	CardMedia,
+	Chip,
 	Grid,
 	Link,
 	Typography
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export const ProductCard: FC<Props> = ({
-	product: { images, title, price, slug }
+	product: { images, title, price, slug, inStock }
 }) => {
 	const [isHovered, setIsHovered] = useState(false);
 	const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -37,6 +38,18 @@ export const ProductCard: FC<Props> = ({
 				<NextLink href={`/product/${slug}`} passHref prefetch={false}>
 					<Link>
 						<CardActionArea>
+							{inStock === 0 && (
+								<Chip
+									color="primary"
+									label="No hay disponibles"
+									sx={{
+										position: 'absolute',
+										zIndex: 99,
+										top: '10px',
+										left: '10px'
+									}}
+								/>
+							)}
 							<CardMedia
 								component="img"
 								className="fadeIn"
