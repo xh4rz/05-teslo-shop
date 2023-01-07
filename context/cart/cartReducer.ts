@@ -48,12 +48,13 @@ export const cartReducer = (
 		case '[Cart] - Remove product in cart':
 			return {
 				...state,
-				cart: state.cart.filter((product) => {
-					!(
-						product._id === action.payload._id &&
-						product.size === action.payload.size
-					);
-				})
+				cart: state.cart.filter(
+					(product) =>
+						!(
+							product._id === action.payload._id &&
+							product.size === action.payload.size
+						)
+				)
 			};
 
 		default:
