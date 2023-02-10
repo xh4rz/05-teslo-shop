@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { AuthLayout } from '../../components/layouts';
 import {
 	Box,
@@ -13,7 +14,7 @@ import {
 import { ErrorOutline } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { validations } from '../../utils';
-import { tesloApi } from '../../api';
+import { AuthContext } from '../../context';
 
 type FormData = {
 	email: string;
@@ -21,6 +22,8 @@ type FormData = {
 };
 
 const LoginPage = () => {
+	const router = useRouter();
+	const { loginUser } = useContext(AuthContext);
 	const {
 		register,
 		handleSubmit,
@@ -32,24 +35,18 @@ const LoginPage = () => {
 	const onLoginUser = async ({ email, password }: FormData) => {
 		setShowError(false);
 
-		try {
-			const { data } = await tesloApi.post('/user/login', {
-				email,
-				password
-			});
+		const isValidLogin = await loginUser(email, password);
 
-			const { token, user } = data;
-
-			console.log({ token, user });
-		} catch (error) {
-			console.log('Error en las credenciales');
+		if (!isValidLogin) {
 			setShowError(true);
 			setTimeout(() => {
 				setShowError(false);
 			}, 3000);
+			return;
 		}
 
 		// TODO: navegar a la pantalla que el usuario estaba
+		router.replace('/');
 	};
 
 	return (
