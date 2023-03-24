@@ -14,7 +14,7 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 
 type FormData = {
-	fistName: string;
+	firstName: string;
 	lastName: string;
 	address: string;
 	address2?: string;
@@ -22,6 +22,19 @@ type FormData = {
 	city: string;
 	country: string;
 	phone: string;
+};
+
+const getAddressFromCookies = (): FormData => {
+	return {
+		firstName: Cookies.get('firstName') || '',
+		lastName: Cookies.get('lastName') || '',
+		address: Cookies.get('address') || '',
+		address2: Cookies.get('address2') || '',
+		zip: Cookies.get('zip') || '',
+		city: Cookies.get('city') || '',
+		country: Cookies.get('country') || '',
+		phone: Cookies.get('phone') || ''
+	};
 };
 
 const AddressPage = () => {
@@ -32,20 +45,11 @@ const AddressPage = () => {
 		handleSubmit,
 		formState: { errors }
 	} = useForm<FormData>({
-		defaultValues: {
-			fistName: '',
-			lastName: '',
-			address: '',
-			address2: '',
-			zip: '',
-			city: '',
-			country: countries[14].code,
-			phone: ''
-		}
+		defaultValues: getAddressFromCookies()
 	});
 
 	const onsubmitAddress = (data: FormData) => {
-		Cookies.set('fistName', data.fistName);
+		Cookies.set('firstName', data.firstName);
 		Cookies.set('lastName', data.lastName);
 		Cookies.set('address', data.address);
 		Cookies.set('address2', data.address2 || '');
@@ -71,11 +75,11 @@ const AddressPage = () => {
 							label="Nombre"
 							variant="filled"
 							fullWidth
-							{...register('fistName', {
+							{...register('firstName', {
 								required: 'Este campo es requerido'
 							})}
-							error={!!errors.fistName}
-							helperText={errors.fistName?.message}
+							error={!!errors.firstName}
+							helperText={errors.firstName?.message}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6}>
