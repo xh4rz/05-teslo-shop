@@ -3,13 +3,16 @@ import {
 	Box,
 	Button,
 	FormControl,
+	FormHelperText,
 	Grid,
+	InputLabel,
 	MenuItem,
+	Select,
 	TextField,
 	Typography
 } from '@mui/material';
 import { countries } from '../../utils';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import { CartContext } from '../../context';
@@ -34,7 +37,7 @@ const getAddressFromCookies = (): FormData => {
 		address2: Cookies.get('address2') || '',
 		zip: Cookies.get('zip') || '',
 		city: Cookies.get('city') || '',
-		country: Cookies.get('country') || '',
+		country: Cookies.get('country') || countries[0].code,
 		phone: Cookies.get('phone') || ''
 	};
 };
@@ -47,7 +50,8 @@ const AddressPage = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors }
+		formState: { errors },
+		control
 	} = useForm<FormData>({
 		defaultValues: getAddressFromCookies()
 	});
@@ -136,23 +140,51 @@ const AddressPage = () => {
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6}>
-						<FormControl fullWidth error={!!errors.country}>
+						{/* <FormControl fullWidth error={!!errors.country}>
 							<TextField
 								select
 								variant="filled"
 								label="País"
-								defaultValue={countries[14].code}
+								defaultValue={Cookies.get('country') || countries[0].code}
 								{...register('country', {
 									required: 'Este campo es requerido'
 								})}
 								error={!!errors.country}
+								helperText={errors.country?.message}
 							>
+								<MenuItem value="">
+									<em>Seleccione un País</em>
+								</MenuItem>
 								{countries.map((country) => (
 									<MenuItem key={country.code} value={country.code}>
 										{country.name}
 									</MenuItem>
 								))}
 							</TextField>
+						</FormControl> */}
+
+						<FormControl fullWidth error={!!errors.country}>
+							<InputLabel>País</InputLabel>
+							<Controller
+								control={control}
+								name="country"
+								rules={{ required: 'Este campo es requerido' }}
+								render={({ field }) => (
+									<Select {...field} label="País">
+										<MenuItem value="">
+											<em>Seleccione un País</em>
+										</MenuItem>
+										{countries.map((country) => (
+											<MenuItem key={country.code} value={country.code}>
+												{country.name}
+											</MenuItem>
+										))}
+									</Select>
+								)}
+							/>
+							{errors.country && (
+								<FormHelperText>{errors.country?.message}</FormHelperText>
+							)}
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} sm={6}>
