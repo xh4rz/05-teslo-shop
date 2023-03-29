@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { tesloApi } from '../../api';
 import { IUser } from '../../interfaces';
 import { AuthContext, authReducer } from './';
+import { useSession } from 'next-auth/react';
 
 export interface AuthState {
 	isLoggedIn: boolean;
@@ -19,29 +20,38 @@ const AUTH_INITIAL_STATE: AuthState = {
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 	const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
 
+	const { data, status } = useSession();
+
 	const router = useRouter();
 
 	useEffect(() => {
-		checkToken();
-	}, []);
-
-	const checkToken = async () => {
-		if (!Cookies.get('token')) {
-			return;
+		if (status === 'authenticated') {
+			console.log({ user: data.user });
+			//TODO: dispatch({ type: '[Auth] - Login', payload: data?.user as IUser });
 		}
+	}, [status, data]);
 
-		try {
-			const { data } = await tesloApi.get('/user/validate-token');
+	// useEffect(() => {
+	// 	checkToken();
+	// }, []);
 
-			const { token, user } = data;
+	// const checkToken = async () => {
+	// 	if (!Cookies.get('token')) {
+	// 		return;
+	// 	}
 
-			Cookies.set('token', token);
+	// 	try {
+	// 		const { data } = await tesloApi.get('/user/validate-token');
 
-			dispatch({ type: '[Auth] - Login', payload: user });
-		} catch (error) {
-			Cookies.remove('token');
-		}
-	};
+	// 		const { token, user } = data;
+
+	// 		Cookies.set('token', token);
+
+	// 		dispatch({ type: '[Auth] - Login', payload: user });
+	// 	} catch (error) {
+	// 		Cookies.remove('token');
+	// 	}
+	// };
 
 	const loginUser = async (
 		email: string,
