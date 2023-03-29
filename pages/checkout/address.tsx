@@ -170,7 +170,7 @@ const AddressPage = () => {
 								name="country"
 								rules={{ required: 'Este campo es requerido' }}
 								render={({ field }) => (
-									<Select {...field} label="País">
+									<Select variant="filled" label="País" {...field}>
 										<MenuItem value="">
 											<em>Seleccione un País</em>
 										</MenuItem>
