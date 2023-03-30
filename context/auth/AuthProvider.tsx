@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import { tesloApi } from '../../api';
 import { IUser } from '../../interfaces';
 import { AuthContext, authReducer } from './';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 
 export interface AuthState {
 	isLoggedIn: boolean;
@@ -22,12 +22,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
 	const { data, status } = useSession();
 
-	const router = useRouter();
+	// const router = useRouter();
 
 	useEffect(() => {
 		if (status === 'authenticated') {
-			console.log({ user: data.user });
-			//TODO: dispatch({ type: '[Auth] - Login', payload: data?.user as IUser });
+			// console.log({ user: data.user });
+			dispatch({ type: '[Auth] - Login', payload: data?.user as IUser });
 		}
 	}, [status, data]);
 
@@ -109,7 +109,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 	};
 
 	const logout = () => {
-		Cookies.remove('token');
 		Cookies.remove('cart');
 		Cookies.remove('firstName');
 		Cookies.remove('lastName');
@@ -119,7 +118,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 		Cookies.remove('city');
 		Cookies.remove('country');
 		Cookies.remove('phone');
-		router.reload();
+		signOut();
+		// router.reload();
+		// Cookies.remove('token');
 	};
 
 	return (
