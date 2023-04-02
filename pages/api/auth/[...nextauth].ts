@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
 import { dbUsers } from '../../../database';
+import FacebookProvider from 'next-auth/providers/facebook';
 
 export default NextAuth({
 	// Configure one or more authentication providers
@@ -37,6 +38,10 @@ export default NextAuth({
 		GithubProvider({
 			clientId: process.env.GITHUB_ID!,
 			clientSecret: process.env.GITHUB_SECRET!
+		}),
+		FacebookProvider({
+			clientId: process.env.FACEBOOK_CLIENT_ID!,
+			clientSecret: process.env.FACEBOOK_CLIENT_SECRET!
 		})
 	],
 
@@ -54,7 +59,10 @@ export default NextAuth({
 
 				switch (account.type) {
 					case 'oauth':
-						// TODO: crear usuario o verificar si existe en mi DB
+						token.user = await dbUsers.oAUthToDbUser(
+							user?.email || '',
+							user?.name || ''
+						);
 						break;
 
 					case 'credentials':
