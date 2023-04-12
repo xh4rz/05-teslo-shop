@@ -56,6 +56,12 @@ export default NextAuth({
 		// secret: process.env.JWT_SECRET_SEED, // deprecated
 	},
 
+	session: {
+		maxAge: 2592000, // 30d
+		strategy: 'jwt',
+		updateAge: 86400 // cada día
+	},
+
 	callbacks: {
 		async jwt({ token, account, user }) {
 			// console.log({ token, account, user });
