@@ -45,6 +45,12 @@ export default NextAuth({
 		})
 	],
 
+	// Custom pages
+	pages: {
+		signIn: '/auth/login',
+		newUser: '/auth/register'
+	},
+
 	// Callbacks
 	jwt: {
 		// secret: process.env.JWT_SECRET_SEED, // deprecated
