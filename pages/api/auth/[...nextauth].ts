@@ -4,6 +4,13 @@ import Credentials from 'next-auth/providers/credentials';
 import { dbUsers } from '../../../database';
 import FacebookProvider from 'next-auth/providers/facebook';
 
+declare module 'next-auth' {
+	interface Session {
+		accessToken: any;
+		user: any;
+	}
+}
+
 export default NextAuth({
 	// Configure one or more authentication providers
 	providers: [
@@ -28,10 +35,10 @@ export default NextAuth({
 
 				// return { name: 'Juan', correo: 'juan@google.com', role: 'admin' };
 
-				return await dbUsers.checkUserEmailPassword(
+				return (await dbUsers.checkUserEmailPassword(
 					credentials!.email,
 					credentials!.password
-				);
+				)) as any;
 			}
 		}),
 
@@ -89,7 +96,7 @@ export default NextAuth({
 		async session({ session, token, user }) {
 			// console.log({ session, token, user });
 
-			session.accessToken = token.accessToken;
+			session.accessToken = token.accessToken as any;
 			session.user = token.user as any;
 
 			return session;
