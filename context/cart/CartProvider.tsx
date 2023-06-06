@@ -2,6 +2,8 @@ import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
 import Cookie from 'js-cookie';
 import { ICartProduct, ShippingAddress } from '../../interfaces';
 import { CartContext, cartReducer } from './';
+import axios from 'axios';
+import { tesloApi } from '../../api';
 
 export interface CartState {
 	isLoaded: boolean;
@@ -159,18 +161,29 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 		});
 	};
 
+	const createOrder = async () => {
+		try {
+			const { data } = await tesloApi.post('/orders');
+			console.log(data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<CartContext.Provider
 			value={{
 				...state,
 
-				//Methods
+				// Methods
 				addProductToCart,
 				updateCartQuantity,
 				removeCartProduct,
-				updateAddress
+				updateAddress,
+
+				// Orders
+				createOrder
 			}}
-			// Methods
 		>
 			{children}
 		</CartContext.Provider>
