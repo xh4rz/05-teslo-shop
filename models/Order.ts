@@ -3,16 +3,16 @@ import { IOrder } from '../interfaces';
 
 const orderSchema = new Schema(
 	{
-		name: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+		user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 		orderItems: [
 			{
 				_id: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
 				title: { type: String, required: true },
 				size: { type: String, required: true },
-				quantity: { type: String, required: true },
+				quantity: { type: Number, required: true },
 				slug: { type: String, required: true },
 				image: { type: String, required: true },
-				price: { type: String, required: true }
+				price: { type: Number, required: true }
 			}
 		],
 		shippingAddress: {
