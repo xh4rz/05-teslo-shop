@@ -34,7 +34,8 @@ type CartActionType =
 				tax: number;
 				total: number;
 			};
-	  };
+	  }
+	| { type: '[Cart] - Order complete' };
 
 export const cartReducer = (
 	state: CartState,
@@ -86,6 +87,16 @@ export const cartReducer = (
 			return {
 				...state,
 				shippingAddress: action.payload
+			};
+
+		case '[Cart] - Order complete':
+			return {
+				...state,
+				cart: [],
+				numberOfItems: 0,
+				subTotal: 0,
+				tax: 0,
+				total: 0
 			};
 
 		default:
