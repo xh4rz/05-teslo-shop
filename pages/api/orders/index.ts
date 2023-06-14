@@ -70,6 +70,8 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 		await newOrder.save();
 
+		await db.disconnect();
+
 		return res.status(201).json(newOrder);
 	} catch (error: any) {
 		await db.disconnect();
