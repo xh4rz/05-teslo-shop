@@ -1,4 +1,3 @@
-import NextLink from 'next/link';
 import { GetServerSideProps, NextPage } from 'next';
 import {
 	Box,
@@ -7,80 +6,102 @@ import {
 	Chip,
 	Divider,
 	Grid,
-	Link,
 	Typography
 } from '@mui/material';
 import { ShopLayout } from '../../components/layouts';
 import { CartList, OrderSummary } from '../../components/cart';
 import {
-	// CreditCardOffOutlined,
+	CreditCardOffOutlined,
 	CreditScoreOutlined
 } from '@mui/icons-material';
 import { getSession } from 'next-auth/react';
 import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
+import { countries } from '../../utils';
 
 interface Props {
 	order: IOrder;
 }
 
-const OrderPage: NextPage<Props> = ({ order }) => {
-	console.log({ order });
+const OrderPage: NextPage<Props> = ({
+	order: {
+		_id,
+		isPaid,
+		numberOfItems,
+		shippingAddress: {
+			firstName,
+			lastName,
+			address,
+			address2,
+			city,
+			zip,
+			country,
+			phone
+		},
+		orderItems
+	}
+}) => {
 	return (
 		<ShopLayout
 			title="Resumen de la orden 123456789"
 			pageDescription="Resumen de la orden"
 		>
 			<Typography variant="h1" component="h1">
-				Orden: ABC123
+				Orden: {_id}
 			</Typography>
 
-			{/* <Chip
-				sx={{ my: 2 }}
-				label="Pendiente de pago"
-				variant="outlined"
-				color="error"
-				icon={<CreditCardOffOutlined />}
-			/> */}
-			<Chip
-				sx={{ my: 2 }}
-				label="Orden ya fue pagada"
-				variant="outlined"
-				color="success"
-				icon={<CreditScoreOutlined />}
-			/>
+			{isPaid ? (
+				<Chip
+					sx={{ my: 2 }}
+					label="Orden ya fue pagada"
+					variant="outlined"
+					color="success"
+					icon={<CreditScoreOutlined />}
+				/>
+			) : (
+				<Chip
+					sx={{ my: 2 }}
+					label="Pendiente de pago"
+					variant="outlined"
+					color="error"
+					icon={<CreditCardOffOutlined />}
+				/>
+			)}
+
 			<Grid container>
 				<Grid item xs={12} sm={7}>
-					<CartList />
+					<CartList products={orderItems} />
 				</Grid>
 				<Grid item xs={12} sm={5}>
 					<Card className="summary-card">
 						<CardContent>
-							<Typography variant="h2">Resumen (3 productos)</Typography>
+							<Typography variant="h2">
+								Resumen ({numberOfItems}{' '}
+								{numberOfItems > 1 ? 'productos' : 'producto'} )
+							</Typography>
 							<Divider sx={{ my: 1 }} />
 
 							<Box display="flex" justifyContent="space-between">
 								<Typography variant="subtitle1">
 									Dirección de entrega
 								</Typography>
-								<NextLink href="/checkout/address" passHref>
-									<Link underline="always">Editar</Link>
-								</NextLink>
 							</Box>
 
-							<Typography>Harold Gonzalez</Typography>
-							<Typography>323 Algún lugar</Typography>
-							<Typography>Calle 101, ABC 123</Typography>
-							<Typography>Bogotá</Typography>
-							<Typography>+57 3024032590</Typography>
+							<Typography>
+								{firstName} {lastName}
+							</Typography>
+							<Typography>
+								{address} {address2 ? `, ${address2}` : ''}
+							</Typography>
+							<Typography>
+								{city}, {zip}
+							</Typography>
+							<Typography>
+								{countries.find((i) => i.code === country)?.name}
+							</Typography>
+							<Typography>{phone}</Typography>
 
 							<Divider sx={{ my: 1 }} />
-
-							<Box display="flex" justifyContent="end">
-								<NextLink href="/cart" passHref>
-									<Link underline="always">Editar</Link>
-								</NextLink>
-							</Box>
 
 							<OrderSummary />
 
