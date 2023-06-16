@@ -28,6 +28,9 @@ const OrderPage: NextPage<Props> = ({
 		_id,
 		isPaid,
 		numberOfItems,
+		subTotal,
+		total,
+		tax,
 		shippingAddress: {
 			firstName,
 			lastName,
@@ -103,19 +106,22 @@ const OrderPage: NextPage<Props> = ({
 
 							<Divider sx={{ my: 1 }} />
 
-							<OrderSummary />
+							<OrderSummary
+								orderValues={{ numberOfItems, subTotal, total, tax }}
+							/>
 
-							<Box sx={{ mt: 3 }}>
-								{/* TODO */}
-								<h1>Pagar</h1>
-
-								<Chip
-									sx={{ my: 2 }}
-									label="Orden ya fue pagada"
-									variant="outlined"
-									color="success"
-									icon={<CreditScoreOutlined />}
-								/>
+							<Box sx={{ mt: 3 }} display="flex" flexDirection="column">
+								{isPaid ? (
+									<Chip
+										sx={{ my: 2 }}
+										label="Orden ya fue pagada"
+										variant="outlined"
+										color="success"
+										icon={<CreditScoreOutlined />}
+									/>
+								) : (
+									<h1>Pagar</h1>
+								)}
 							</Box>
 						</CardContent>
 					</Card>
