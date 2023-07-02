@@ -5,27 +5,32 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { lightTheme } from '../themes';
 import { SWRConfig } from 'swr';
 import { AuthProvider, CartProvider, UiProvider } from '../context';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<SessionProvider>
-			<SWRConfig
-				value={{
-					fetcher: (resource, init) =>
-						fetch(resource, init).then((res) => res.json())
-				}}
+			<PayPalScriptProvider
+				options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '' }}
 			>
-				<AuthProvider>
-					<CartProvider>
-						<UiProvider>
-							<ThemeProvider theme={lightTheme}>
-								<CssBaseline />
-								<Component {...pageProps} />
-							</ThemeProvider>
-						</UiProvider>
-					</CartProvider>
-				</AuthProvider>
-			</SWRConfig>
+				<SWRConfig
+					value={{
+						fetcher: (resource, init) =>
+							fetch(resource, init).then((res) => res.json())
+					}}
+				>
+					<AuthProvider>
+						<CartProvider>
+							<UiProvider>
+								<ThemeProvider theme={lightTheme}>
+									<CssBaseline />
+									<Component {...pageProps} />
+								</ThemeProvider>
+							</UiProvider>
+						</CartProvider>
+					</AuthProvider>
+				</SWRConfig>
+			</PayPalScriptProvider>
 		</SessionProvider>
 	);
 }
