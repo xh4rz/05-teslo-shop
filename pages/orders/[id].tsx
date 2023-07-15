@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import {
 	Box,
 	Card,
 	CardContent,
 	Chip,
+	CircularProgress,
 	Divider,
 	Grid,
 	Typography
@@ -20,7 +23,6 @@ import { IOrder } from '../../interfaces';
 import { countries } from '../../utils';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import { tesloApi } from '../../api';
-import { useRouter } from 'next/router';
 
 export type OrderResponseBody = {
 	id: string;
@@ -60,19 +62,24 @@ const OrderPage: NextPage<Props> = ({
 }) => {
 	const router = useRouter();
 
+	const [isPaying, setIsPaying] = useState(false);
+
 	const onOrderCompleted = async (details: OrderResponseBody) => {
 		if (details.status !== 'COMPLETED') {
 			return alert('No hay pago en Paypal');
 		}
 
+		setIsPaying(true);
+
 		try {
-			const { data } = await tesloApi.post(`/orders/pay`, {
+			await tesloApi.post(`/orders/pay`, {
 				transactionId: details.id,
 				orderId: _id
 			});
 
 			router.reload();
 		} catch (error) {
+			setIsPaying(false);
 			console.log(error);
 			alert('Error');
 		}
@@ -145,37 +152,51 @@ const OrderPage: NextPage<Props> = ({
 							/>
 
 							<Box sx={{ mt: 3 }} display="flex" flexDirection="column">
-								{isPaid ? (
-									<Chip
-										sx={{ my: 2 }}
-										label="Orden ya fue pagada"
-										variant="outlined"
-										color="success"
-										icon={<CreditScoreOutlined />}
-									/>
-								) : (
-									<PayPalButtons
-										createOrder={(data, actions) => {
-											return actions.order.create({
-												purchase_units: [
-													{
-														amount: {
-															value: `${total}`
+								<Box
+									display="flex"
+									justifyContent="center"
+									className="fadeIn"
+									sx={{ display: isPaying ? 'flex' : 'none' }}
+								>
+									<CircularProgress />
+								</Box>
+
+								<Box
+									flexDirection="column"
+									sx={{ display: isPaying ? 'none' : 'flex', flex: 1 }}
+								>
+									{isPaid ? (
+										<Chip
+											sx={{ my: 2 }}
+											label="Orden ya fue pagada"
+											variant="outlined"
+											color="success"
+											icon={<CreditScoreOutlined />}
+										/>
+									) : (
+										<PayPalButtons
+											createOrder={(data, actions) => {
+												return actions.order.create({
+													purchase_units: [
+														{
+															amount: {
+																value: `${total}`
+															}
 														}
-													}
-												]
-											});
-										}}
-										onApprove={(data, actions) => {
-											return actions.order!.capture().then((details) => {
-												onOrderCompleted(details);
-												// console.log({ details });
-												// const name = details.payer.name!.given_name;
-												// alert(`Transaction completed by ${name}`);
-											});
-										}}
-									/>
-								)}
+													]
+												});
+											}}
+											onApprove={(data, actions) => {
+												return actions.order!.capture().then((details) => {
+													onOrderCompleted(details);
+													// console.log({ details });
+													// const name = details.payer.name!.given_name;
+													// alert(`Transaction completed by ${name}`);
+												});
+											}}
+										/>
+									)}
+								</Box>
 							</Box>
 						</CardContent>
 					</Card>
