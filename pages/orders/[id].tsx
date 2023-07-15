@@ -19,6 +19,19 @@ import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
 import { countries } from '../../utils';
 import { PayPalButtons } from '@paypal/react-paypal-js';
+import { tesloApi } from '../../api';
+import { useRouter } from 'next/router';
+
+export type OrderResponseBody = {
+	id: string;
+	status:
+		| 'CREATED'
+		| 'COMPLETED'
+		| 'SAVED'
+		| 'APPROVED'
+		| 'VOIDED'
+		| 'PAYER_ACTION_REQUIRED';
+};
 
 interface Props {
 	order: IOrder;
@@ -45,6 +58,26 @@ const OrderPage: NextPage<Props> = ({
 		orderItems
 	}
 }) => {
+	const router = useRouter();
+
+	const onOrderCompleted = async (details: OrderResponseBody) => {
+		if (details.status !== 'COMPLETED') {
+			return alert('No hay pago en Paypal');
+		}
+
+		try {
+			const { data } = await tesloApi.post(`/orders/pay`, {
+				transactionId: details.id,
+				orderId: _id
+			});
+
+			router.reload();
+		} catch (error) {
+			console.log(error);
+			alert('Error');
+		}
+	};
+
 	return (
 		<ShopLayout
 			title="Resumen de la orden 123456789"
@@ -135,8 +168,9 @@ const OrderPage: NextPage<Props> = ({
 										}}
 										onApprove={(data, actions) => {
 											return actions.order!.capture().then((details) => {
-												console.log({ details });
-												const name = details.payer.name!.given_name;
+												onOrderCompleted(details);
+												// console.log({ details });
+												// const name = details.payer.name!.given_name;
 												// alert(`Transaction completed by ${name}`);
 											});
 										}}
