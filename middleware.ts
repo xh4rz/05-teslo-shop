@@ -33,11 +33,19 @@ import { getToken } from 'next-auth/jwt';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(req: NextRequest) {
-	const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+	const session: any = await getToken({
+		req,
+		secret: process.env.NEXTAUTH_SECRET
+	});
 
 	// Información útil sobre el usuario
 
-	if (!session) {
+	if (
+		!session &&
+		['/checkout/address', '/checkout/summary', '/admin'].includes(
+			req.nextUrl.pathname
+		)
+	) {
 		const requestedPage = req.nextUrl.pathname;
 		const url = req.nextUrl.clone();
 		url.pathname = '/auth/login';
@@ -46,11 +54,19 @@ export async function middleware(req: NextRequest) {
 		return NextResponse.redirect(url);
 	}
 
+	if (req.nextUrl.pathname.startsWith('/admin')) {
+		const validRoles = ['admin', 'super-user', 'SEO'];
+
+		if (!validRoles.includes(session.user.role)) {
+			return NextResponse.redirect(new URL('/', req.url));
+		}
+	}
+
 	// return NextResponse.redirect(new URL('/about-2', request.url));
 	return NextResponse.next();
 }
 
 // See "Matching Paths" below to learn more
-export const config = {
-	matcher: ['/checkout/address', '/checkout/summary']
-};
+// export const config = {
+// 	matcher: ['/checkout/address', '/checkout/summary']
+// };
