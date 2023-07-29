@@ -41,7 +41,7 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		return res.status(400).json({ message: 'No existe usuario por ese id' });
 	}
 
-	const validRoles = ['admin', 'super-user', 'SEO'];
+	const validRoles = ['admin', 'super-user', 'SEO', 'client'];
 
 	if (!validRoles.includes(role)) {
 		return res
