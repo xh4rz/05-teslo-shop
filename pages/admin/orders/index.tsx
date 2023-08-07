@@ -1,6 +1,6 @@
 import useSWR from 'swr';
-import { IOrder, IUser } from '../../interfaces';
-import { AdminLayout } from '../../components/layouts';
+import { IOrder, IUser } from '../../../interfaces';
+import { AdminLayout } from '../../../components/layouts';
 import { ConfirmationNumberOutlined } from '@mui/icons-material';
 import { Chip, Grid } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
