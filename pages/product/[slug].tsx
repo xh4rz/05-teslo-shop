@@ -142,7 +142,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 
 // You should use getStaticPaths if you’re statically pre-rendering pages that use dynamic routes
 
-export const getStaticPaths: GetStaticPaths = async (ctx) => {
+export const getStaticPaths: GetStaticPaths = async () => {
 	const productSlugs = await dbProducts.getAllProductSlugs();
 
 	return {

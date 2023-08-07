@@ -37,16 +37,20 @@ const RegisterPage = () => {
 
 	const [showError, setShowError] = useState(false);
 
-	const [errorMessage, setErrorMessage] = useState('');
+	// const [errorMessage, setErrorMessage] = useState('');
 
 	const onRegisterForm = async ({ name, email, password }: FormData) => {
 		setShowError(false);
 
-		const { hasError, message } = await registerUser(name, email, password);
+		const { hasError /* message */ } = await registerUser(
+			name,
+			email,
+			password
+		);
 
 		if (hasError) {
 			setShowError(true);
-			setErrorMessage(message!);
+			// setErrorMessage(message!);
 			setTimeout(() => {
 				setShowError(false);
 			}, 3000);

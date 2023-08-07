@@ -5,6 +5,7 @@ import { ISize } from '../../interfaces';
 interface Props {
 	selectedSize?: ISize;
 	sizes: ISize[];
+	// eslint-disable-next-line no-unused-vars
 	onSelectedSize: (size: ISize) => void;
 }
 

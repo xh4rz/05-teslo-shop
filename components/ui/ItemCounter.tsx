@@ -5,6 +5,7 @@ import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
 interface Props {
 	currentValue: number;
 	maxValue: number;
+	// eslint-disable-next-line no-unused-vars
 	updatedQuantity: (newQuantity: number) => void;
 }
 
