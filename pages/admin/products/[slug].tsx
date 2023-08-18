@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next';
 import { useForm } from 'react-hook-form';
 
 import { AdminLayout } from '../../../components/layouts';
-import { IProduct, ISize } from '../../../interfaces';
+import { IProduct } from '../../../interfaces';
 import {
 	DriveFileRenameOutline,
 	SaveOutlined,
@@ -25,8 +25,6 @@ import {
 	FormGroup,
 	FormLabel,
 	Grid,
-	ListItem,
-	Paper,
 	Radio,
 	RadioGroup,
 	TextField
@@ -64,6 +62,20 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 	} = useForm<FormData>({
 		defaultValues: product
 	});
+
+	const onChangeSize = (size: string) => {
+		const currentSizes = getValues('sizes');
+
+		if (currentSizes.includes(size)) {
+			return setValue(
+				'sizes',
+				currentSizes.filter((s) => s !== size),
+				{ shouldValidate: true }
+			);
+		}
+
+		setValue('sizes', [...currentSizes, size], { shouldValidate: true });
+	};
 
 	const onDeleteTag = (tag: string) => {};
 
@@ -193,8 +205,11 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 							{validSizes.map((size) => (
 								<FormControlLabel
 									key={size}
-									control={<Checkbox />}
+									control={
+										<Checkbox checked={getValues('sizes').includes(size)} />
+									}
 									label={size}
+									onChange={() => onChangeSize(size)}
 								/>
 							))}
 						</FormGroup>
