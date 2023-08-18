@@ -1,7 +1,8 @@
+import NextLink from 'next/link';
 import useSWR from 'swr';
-import { AdminLayout } from '../../components/layouts';
-import { IProduct } from '../../interfaces';
-import { CardMedia, Grid } from '@mui/material';
+import { AdminLayout } from '../../../components/layouts';
+import { IProduct } from '../../../interfaces';
+import { CardMedia, Grid, Link } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CategoryOutlined } from '@mui/icons-material';
 
@@ -25,7 +26,14 @@ const columns: GridColDef[] = [
 	{
 		field: 'title',
 		headerName: 'Title',
-		width: 250
+		width: 250,
+		renderCell: ({ row }: GridRenderCellParams) => {
+			return (
+				<NextLink href={`/admin/products/${row.slug}`} passHref>
+					<Link underline="always">{row.title}</Link>
+				</NextLink>
+			);
+		}
 	},
 	{
 		field: 'gender',
