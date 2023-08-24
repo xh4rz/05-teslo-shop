@@ -55,7 +55,7 @@ const updateProducts = async (
 		});
 	}
 
-	if (images.length <= 2) {
+	if (images.length < 2) {
 		return res.status(400).json({
 			message: 'Es necesario al menos 2 imágenes'
 		});
