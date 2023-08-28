@@ -38,5 +38,11 @@ async function getProductsBySlug(
 		});
 	}
 
+	product.images = product.images.map((image) => {
+		return image.includes('http')
+			? image
+			: `${process.env.HOST_NAME}products/${image}`;
+	});
+
 	return res.json(product);
 }
