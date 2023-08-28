@@ -3,6 +3,8 @@ import { IProduct } from '../../../interfaces';
 import { db } from '../../../database';
 import { Product } from '../../../models';
 import { isValidObjectId } from 'mongoose';
+import { v2 as cloudinary } from 'cloudinary';
+cloudinary.config(process.env.CLOUDINARY_URL || '');
 
 type Data =
 	| {
@@ -77,6 +79,20 @@ const updateProduct = async (
 		}
 
 		// TODO: eliminar fotos en Cloudinary
+		// https://res.cloudinary.com/dzwstma9h/image/upload/v1693187732/zsijecbmxz1vy5mv0sfh.jpg
+
+		product.images.forEach(async (image) => {
+			if (!images.includes(image)) {
+				// Borrar de cloudinary
+				const [fileId, extension] = image
+					.substring(image.lastIndexOf('/') + 1)
+					.split('.');
+
+				console.log({ fileId, extension });
+
+				await cloudinary.uploader.destroy(fileId);
+			}
+		});
 
 		await product.update(req.body);
 
