@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
-import { getProviders, getSession, signIn } from 'next-auth/react';
+import { getProviders, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { AuthLayout } from '../../components/layouts';
 import {
