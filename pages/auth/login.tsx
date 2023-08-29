@@ -17,6 +17,7 @@ import {
 import { ErrorOutline } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { validations } from '../../utils';
+import { getToken } from 'next-auth/jwt';
 
 type FormData = {
 	email: string;
@@ -175,7 +176,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 	req,
 	query
 }) => {
-	const session = await getSession({ req });
+	const session = await getToken({ req });
 
 	const { p = '/' } = query;
 
