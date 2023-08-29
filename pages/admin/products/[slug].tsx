@@ -36,7 +36,7 @@ import {
 	RadioGroup,
 	TextField
 } from '@mui/material';
-import { tesloApi } from '../../../api';
+import { tesloApi } from '../../../axiosApi';
 import { Product } from '../../../models';
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats'];

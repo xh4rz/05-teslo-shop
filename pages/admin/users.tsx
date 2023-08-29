@@ -5,7 +5,7 @@ import { PeopleOutline } from '@mui/icons-material';
 import { Grid, MenuItem, Select } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { IUser } from '../../interfaces';
-import { tesloApi } from '../../api';
+import { tesloApi } from '../../axiosApi';
 
 const UsersPage = () => {
 	const { data, error } = useSWR<IUser[]>('/api/admin/users');

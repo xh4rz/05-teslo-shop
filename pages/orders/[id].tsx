@@ -22,7 +22,7 @@ import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
 import { countries } from '../../utils';
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import { tesloApi } from '../../api';
+import { tesloApi } from '../../axiosApi';
 
 export type OrderResponseBody = {
 	id: string;
