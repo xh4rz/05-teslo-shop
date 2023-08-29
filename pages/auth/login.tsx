@@ -1,23 +1,22 @@
 import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
-import { getProviders, signIn } from 'next-auth/react';
+import { getProviders, getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { AuthLayout } from '../../components/layouts';
 import {
 	Box,
 	Button,
-	Chip,
+	// Chip,
 	Divider,
 	Grid,
 	Link,
 	TextField,
 	Typography
 } from '@mui/material';
-import { ErrorOutline } from '@mui/icons-material';
+// import { ErrorOutline } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { validations } from '../../utils';
-import { getToken } from 'next-auth/jwt';
 
 type FormData = {
 	email: string;
@@ -33,7 +32,7 @@ const LoginPage = () => {
 		formState: { errors }
 	} = useForm<FormData>();
 
-	const [showError, setShowError] = useState(false);
+	// const [showError, setShowError] = useState(false);
 
 	const [providers, setProviders] = useState<any>({});
 
@@ -44,7 +43,7 @@ const LoginPage = () => {
 	}, []);
 
 	const onLoginUser = async ({ email, password }: FormData) => {
-		setShowError(false);
+		// setShowError(false);
 
 		// const isValidLogin = await loginUser(email, password);
 
@@ -75,13 +74,13 @@ const LoginPage = () => {
 							<Typography variant="h1" component="h1">
 								Iniciar Sesión
 							</Typography>
-							<Chip
+							{/* <Chip
 								label="No reconocemos ese usuario / contraseña"
 								color="error"
 								icon={<ErrorOutline />}
 								className="fadeIn"
 								sx={{ display: showError ? 'flex' : 'none' }}
-							/>
+							/> */}
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
@@ -176,7 +175,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 	req,
 	query
 }) => {
-	const session = await getToken({ req });
+	const session = await getSession({ req });
 
 	const { p = '/' } = query;
 
