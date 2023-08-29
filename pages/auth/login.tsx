@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
-import { getProviders, getSession, signIn } from 'next-auth/react';
+import { getProviders, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { AuthLayout } from '../../components/layouts';
 import {
@@ -17,6 +17,7 @@ import {
 import { ErrorOutline } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { validations } from '../../utils';
+import { getToken } from 'next-auth/jwt';
 
 type FormData = {
 	email: string;
@@ -171,26 +172,26 @@ const LoginPage = () => {
 // You should use getServerSideProps when:
 // - Only if you need to pre-render a page whose data must be fetched at request time
 
-// export const getServerSideProps: GetServerSideProps = async ({
-// 	req,
-// 	query
-// }) => {
-// 	const session = await getSession({ req });
+export const getServerSideProps: GetServerSideProps = async ({
+	req,
+	query
+}) => {
+	const session = await getToken({ req });
 
-// 	const { p = '/' } = query;
+	const { p = '/' } = query;
 
-// 	if (session) {
-// 		return {
-// 			redirect: {
-// 				destination: p.toString(),
-// 				permanent: false
-// 			}
-// 		};
-// 	}
+	if (session) {
+		return {
+			redirect: {
+				destination: p.toString(),
+				permanent: false
+			}
+		};
+	}
 
-// 	return {
-// 		props: {}
-// 	};
-// };
+	return {
+		props: {}
+	};
+};
 
 export default LoginPage;

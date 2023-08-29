@@ -32,9 +32,6 @@ export default NextAuth({
 			},
 			async authorize(credentials) {
 				console.log({ credentials });
-				// TODO: validar contra base de datos
-
-				// return { name: 'Juan', correo: 'juan@google.com', role: 'admin' };
 
 				return (await dbUsers.checkUserEmailPassword(
 					credentials!.email,
